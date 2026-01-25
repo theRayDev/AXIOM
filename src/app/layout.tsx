@@ -1,22 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google"; // Using Outfit for headings if available
 import "./globals.css";
+import { Navbar } from "@/components/ui/Navbar";
 
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "ResearchScroll — Research Papers, But Make It Fun 🧪",
-  description: "Discover groundbreaking science explained simply. No PhD required. Join 50K+ curious minds exploring AI, space, climate, and more!",
-  keywords: ["research", "papers", "science", "AI", "machine learning", "teens", "education", "arxiv"],
-  openGraph: {
-    title: "ResearchScroll — Research Papers, But Make It Fun 🧪",
-    description: "Discover groundbreaking science explained simply. No PhD required.",
-    type: "website",
-  },
+  title: "AXIOM | Curiosity Engine",
+  description: "A graph-based research assistant allowing you to traverse the knowledge space.",
 };
 
 export default function RootLayout({
@@ -25,9 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="antialiased">
-        {children}
+    <html lang="en" className="dark">
+      <body
+        className={`${inter.variable} ${outfit.variable} min-h-screen bg-black font-sans text-white antialiased selection:bg-indigo-500/30`}
+      >
+        <Navbar />
+        <main className="pt-16">
+          {children}
+        </main>
       </body>
     </html>
   );

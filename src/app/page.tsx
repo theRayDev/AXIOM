@@ -1,431 +1,95 @@
-"use client";
+'use client';
+// Use client for framer motion interactions (or use separate component)
+// For simple animations we can keep it strictly client or mix.
+// Landing page usually has interactivity.
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { useState } from "react";
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { ArrowRight, Brain, Network, Zap } from 'lucide-react';
 
-// 🔥 Trending papers with fun, accessible summaries
-const trendingPapers = [
-  {
-    id: "1706.03762",
-    title: "Attention Is All You Need",
-    emoji: "🧠",
-    tldr: "The paper that started the AI revolution. Transformers ditched old-school neural networks and changed EVERYTHING.",
-    vibe: "Mind-blowing",
-    category: "AI/ML",
-    categoryColor: "purple",
-    reactions: { fire: 42000, mindblown: 38000, rocket: 25000 },
-    readTime: "8 min",
-  },
-  {
-    id: "1810.04805",
-    title: "BERT: Teaching AI to Really Understand Language",
-    emoji: "📖",
-    tldr: "Google made AI that actually gets context. It reads both directions and understands words like humans do.",
-    vibe: "Game-changer",
-    category: "NLP",
-    categoryColor: "pink",
-    reactions: { fire: 35000, mindblown: 28000, rocket: 19000 },
-    readTime: "10 min",
-  },
-  {
-    id: "1406.2661",
-    title: "GANs: AI That Creates Art & Fake Faces",
-    emoji: "🎨",
-    tldr: "Two neural networks fight each other to create hyper-realistic images. This is how deepfakes work.",
-    vibe: "Wild",
-    category: "Deep Learning",
-    categoryColor: "cyan",
-    reactions: { fire: 28000, mindblown: 32000, rocket: 15000 },
-    readTime: "7 min",
-  },
-  {
-    id: "2303.08774",
-    title: "GPT-4: The AI That Can Do Almost Anything",
-    emoji: "🤖",
-    tldr: "OpenAI's most powerful AI yet. It writes code, passes exams, and has conversations like a human.",
-    vibe: "Insane",
-    category: "LLMs",
-    categoryColor: "green",
-    reactions: { fire: 55000, mindblown: 48000, rocket: 42000 },
-    readTime: "15 min",
-  },
-];
-
-const categories = [
-  { id: "ai", label: "🤖 AI & ML", color: "purple" },
-  { id: "space", label: "🚀 Space", color: "blue" },
-  { id: "climate", label: "🌍 Climate", color: "green" },
-  { id: "brain", label: "🧠 Neuroscience", color: "pink" },
-  { id: "quantum", label: "⚛️ Quantum", color: "cyan" },
-  { id: "bio", label: "🧬 Biology", color: "orange" },
-];
-
-function PaperCard({ paper, index }: { paper: typeof trendingPapers[0]; index: number }) {
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
-
-  const colorClasses: Record<string, string> = {
-    purple: "chip-purple",
-    pink: "chip-pink",
-    blue: "chip-blue",
-    cyan: "chip-cyan",
-    green: "chip-green",
-    orange: "chip-orange",
-  };
-
+export default function LandingPage() {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.1, type: "spring", bounce: 0.3 }}
-      className="neon-card p-6 md:p-8"
-    >
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <span className="text-4xl">{paper.emoji}</span>
-          <div>
-            <span className={`chip ${colorClasses[paper.categoryColor]}`}>
-              {paper.category}
-            </span>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="stat-badge">⏱️ {paper.readTime}</span>
-              <span className="stat-badge">✨ {paper.vibe}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden pt-20 pb-32 md:pt-32 bg-cosmic">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
 
-      {/* Title */}
-      <h3 className="text-xl md:text-2xl font-bold text-white mb-4 leading-tight">
-        {paper.title}
-      </h3>
-
-      {/* TL;DR */}
-      <div className="tldr-box mb-5">
-        <p className="text-sm font-semibold text-purple-300 mb-1">⚡ TL;DR</p>
-        <p className="text-white/90 leading-relaxed">
-          {paper.tldr}
-        </p>
-      </div>
-
-      {/* Reactions */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <button
-          onClick={() => setLiked(!liked)}
-          className={`reaction-btn ${liked ? 'active' : ''}`}
-        >
-          🔥 {(paper.reactions.fire / 1000).toFixed(0)}k
-        </button>
-        <button className="reaction-btn">
-          🤯 {(paper.reactions.mindblown / 1000).toFixed(0)}k
-        </button>
-        <button className="reaction-btn">
-          🚀 {(paper.reactions.rocket / 1000).toFixed(0)}k
-        </button>
-        <button
-          onClick={() => setSaved(!saved)}
-          className={`reaction-btn ml-auto ${saved ? 'active' : ''}`}
-        >
-          {saved ? '📌 Saved' : '🔖 Save'}
-        </button>
-      </div>
-
-      {/* Read Button */}
-      <Link href={`/paper/${paper.id}`} className="block mt-5">
-        <button className="w-full btn-gradient">
-          Read Full Breakdown →
-        </button>
-      </Link>
-    </motion.article>
-  );
-}
-
-function Navbar() {
-  return (
-    <motion.nav
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 glass-card rounded-none border-t-0 border-x-0"
-    >
-      <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">📚</span>
-          <span className="font-bold text-lg text-gradient">ResearchScroll</span>
-        </Link>
-
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/explore" className="text-white/70 hover:text-white transition-colors font-medium">
-            🔍 Explore
-          </Link>
-          <Link href="/saved" className="text-white/70 hover:text-white transition-colors font-medium">
-            📌 Saved
-          </Link>
-          <Link href="/trending" className="text-white/70 hover:text-white transition-colors font-medium">
-            🔥 Trending
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button className="btn-ghost text-sm py-2 px-4 hidden sm:flex">Sign In</button>
-          <button className="btn-gradient text-sm py-2 px-5">Join Free</button>
-        </div>
-      </div>
-    </motion.nav>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="pt-28 pb-12 px-4 md:px-6 relative overflow-hidden">
-      {/* Animated background blobs */}
-      <div className="absolute inset-0 bg-mesh pointer-events-none" />
-
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, type: "spring" }}
-        >
-          {/* Fun badge */}
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", bounce: 0.5 }}
-            className="inline-flex items-center gap-2 chip chip-purple mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <span className="animate-pulse">🔥</span>
-            <span>Join 50K+ curious minds</span>
-          </motion.div>
-
-          <h1 className="headline-hero mb-6">
-            Research papers,
-            <br />
-            <span className="text-gradient text-glow">but make it fun.</span>
-          </h1>
-
-          <p className="body-large max-w-2xl mx-auto mb-10">
-            Discover groundbreaking science explained in a way that actually makes sense.
-            No PhD required. Just curiosity. 🧪✨
-          </p>
-        </motion.div>
-
-        {/* Search */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="max-w-xl mx-auto mb-10"
-        >
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="What are you curious about? 🤔"
-              className="input-search"
-            />
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-xl">🔍</span>
-          </div>
-        </motion.div>
-
-        {/* Category Pills */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-3"
-        >
-          {categories.map((cat, i) => (
-            <motion.button
-              key={cat.id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 + i * 0.05, type: "spring", bounce: 0.4 }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className={`chip chip-${cat.color}`}
-            >
-              {cat.label}
-            </motion.button>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function TrendingSection() {
-  return (
-    <section className="py-16 px-4 md:px-6">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex items-center justify-between mb-10"
-        >
-          <div>
-            <h2 className="headline-large mb-2">
-              🔥 Trending Now
-            </h2>
-            <p className="text-white/60">
-              The research everyone&apos;s talking about
-            </p>
-          </div>
-          <Link href="/explore">
-            <button className="btn-ghost">See All →</button>
-          </Link>
-        </motion.div>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          {trendingPapers.map((paper, index) => (
-            <PaperCard key={paper.id} paper={paper} index={index} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function WhySection() {
-  const reasons = [
-    {
-      emoji: "🎯",
-      title: "Zero Jargon",
-      desc: "We break down complex research into bite-sized, understandable pieces.",
-    },
-    {
-      emoji: "⚡",
-      title: "5-Min Reads",
-      desc: "Get the key insights without reading 50-page papers.",
-    },
-    {
-      emoji: "🌍",
-      title: "Real Impact",
-      desc: "Understand how research affects your life and the world.",
-    },
-    {
-      emoji: "🎮",
-      title: "Actually Fun",
-      desc: "Learning about science shouldn't feel like homework.",
-    },
-  ];
-
-  return (
-    <section className="py-20 px-4 md:px-6 bg-mesh">
-      <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center mb-14"
-        >
-          <h2 className="headline-large mb-4">
-            Why you&apos;ll actually <span className="text-gradient">love this</span>
-          </h2>
-          <p className="body-large max-w-xl mx-auto">
-            We&apos;re making science accessible to everyone, not just people in lab coats.
-          </p>
-        </motion.div>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {reasons.map((reason, i) => (
-            <motion.div
-              key={reason.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="glass-card p-6 text-center"
-            >
-              <span className="text-5xl mb-4 block animate-float" style={{ animationDelay: `${i * 0.2}s` }}>
-                {reason.emoji}
+            <h1 className="font-display text-5xl font-bold tracking-tight text-white sm:text-7xl">
+              Research at the speed of{' '}
+              <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                thought
               </span>
-              <h3 className="text-lg font-bold text-white mb-2">{reason.title}</h3>
-              <p className="text-white/60 text-sm">{reason.desc}</p>
-            </motion.div>
-          ))}
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
+              AXIOM is a curiosity engine that maps the relationships between papers, concepts, and questions. Stop searching, start traversing.
+            </p>
+
+            <div className="mt-10 flex justify-center gap-6">
+              <Link
+                href="/explore"
+                className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-indigo-600 px-8 font-medium text-white transition-all hover:bg-indigo-500 hover:scale-105"
+              >
+                <span>Start Exploring</span>
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-indigo-600 to-cyan-600 opacity-0 transition-opacity group-hover:opacity-100" />
+              </Link>
+              <Link
+                href="/about"
+                className="inline-flex h-12 items-center justify-center rounded-full border border-white/10 bg-white/5 px-8 font-medium text-white transition-colors hover:bg-white/10"
+              >
+                How it works
+              </Link>
+            </div>
+          </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function CTASection() {
-  return (
-    <section className="py-20 px-4 md:px-6">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        className="max-w-3xl mx-auto"
-      >
-        <div className="neon-card p-10 md:p-14 text-center relative overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute top-4 left-4 text-4xl opacity-20 rotate-12">🚀</div>
-          <div className="absolute bottom-4 right-4 text-4xl opacity-20 -rotate-12">✨</div>
-
-          <span className="text-6xl mb-6 block">🧪</span>
-          <h2 className="headline-large mb-4">
-            Ready to get <span className="text-gradient">smarter</span>?
-          </h2>
-          <p className="body-large mb-8 max-w-lg mx-auto">
-            Join thousands of curious teens exploring the cutting edge of science. It&apos;s free, forever.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn-gradient text-lg px-10 py-4">
-              Start Exploring 🚀
-            </button>
-            <button className="btn-ghost text-lg px-8 py-4">
-              Watch Demo
-            </button>
+      {/* Feature Grid */}
+      <section className="py-24 bg-black">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+            <FeatureCard
+              icon={Network}
+              title="Knowledge Graph"
+              description="Visualize connections between millions of papers. See how ideas evolve over time."
+            />
+            <FeatureCard
+              icon={Brain}
+              title="Concept Extraction"
+              description="Automatically identifies key concepts and prerequisites so you can learn faster."
+            />
+            <FeatureCard
+              icon={Zap}
+              title="Instant Prereqs"
+              description="Understand the foundations of any paper with a single click."
+            />
           </div>
         </div>
-      </motion.div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="border-t border-white/10 py-10 px-4 md:px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">📚</span>
-          <span className="font-bold text-gradient">ResearchScroll</span>
-        </div>
-        <p className="text-sm text-white/40">
-          Made with 💜 for curious minds everywhere
-        </p>
-        <div className="flex items-center gap-6">
-          <Link href="/about" className="text-sm text-white/40 hover:text-white transition-colors">
-            About
-          </Link>
-          <Link href="/discord" className="text-sm text-white/40 hover:text-white transition-colors">
-            Discord
-          </Link>
-          <Link href="/tiktok" className="text-sm text-white/40 hover:text-white transition-colors">
-            TikTok
-          </Link>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-[var(--background)]">
-      <Navbar />
-      <main>
-        <Hero />
-        <TrendingSection />
-        <WhySection />
-        <CTASection />
-      </main>
-      <Footer />
+      </section>
     </div>
+  );
+}
+
+function FeatureCard({ icon: Icon, title, description }: { icon: any, title: string, description: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="group relative rounded-2xl border border-white/10 bg-zinc-900/50 p-8 hover:bg-zinc-900 transition-colors"
+    >
+      <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+        <Icon className="h-6 w-6" />
+      </div>
+      <h3 className="mb-2 text-xl font-bold text-white">{title}</h3>
+      <p className="text-gray-400">{description}</p>
+    </motion.div>
   );
 }

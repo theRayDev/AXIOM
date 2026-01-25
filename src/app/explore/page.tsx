@@ -1,22 +1,32 @@
-import { searchArxiv, getArxivByCategory, type ArxivPaper } from "@/lib/arxiv";
-import ExploreClient from "./ExploreClient";
+import { PaperService } from '@/modules/paper';
+import ExploreClient from './ExploreClient';
 
-// Popular categories to show by default
-const DEFAULT_CATEGORIES = ["cs.AI", "cs.LG", "cs.CL", "cs.CV"];
+const paperService = new PaperService();
 
-async function getInitialPapers(): Promise<ArxivPaper[]> {
-    try {
-        // Fetch latest papers from Machine Learning category
-        const papers = await getArxivByCategory("cs.LG", 12);
-        return papers;
-    } catch (error) {
-        console.error("Failed to fetch initial papers:", error);
-        return [];
+// Force dynamic because we use search params
+export const dynamic = 'force-dynamic';
+
+export default async function ExplorePage({
+    searchParams,
+}: {
+    searchParams: { [key: string]: string | string[] | undefined };
+}) {
+    // Await searchParams before accessing properties
+    const params = await searchParams;
+    const q = typeof params.q === 'string' ? params.q : '';
+
+    let papers = [];
+
+    if (q) {
+        try {
+            papers = await paperService.searchPapers(q);
+        } catch (e) {
+            console.error("Search error:", e);
+        }
+    } else {
+        // Optionally fetch trending or random
+        // papers = await paperService.getTrending();
     }
-}
 
-export default async function ExplorePage() {
-    const initialPapers = await getInitialPapers();
-
-    return <ExploreClient initialPapers={initialPapers} />;
+    return <ExploreClient initialPapers={papers} />;
 }
