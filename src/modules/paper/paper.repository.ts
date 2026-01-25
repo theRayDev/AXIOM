@@ -83,4 +83,38 @@ export class PaperRepository {
             orderBy: [desc(papers.publishedAt)],
         });
     }
+
+    async addEdge(sourceId: string, targetId: string, type: string, weight = 1.0): Promise<void> {
+        await this.db.insert(schema.paperEdges).values({
+            sourcePaperId: sourceId,
+            targetPaperId: targetId,
+            edgeType: type,
+            weight,
+        }).onConflictDoNothing();
+    }
+
+    async addConceptRelation(paperId: string, conceptId: string, type: string, priority = 0): Promise<void> {
+        await this.db.insert(schema.paperConcepts).values({
+            paperId,
+            conceptId,
+            relationType: type,
+            priority,
+        }).onConflictDoNothing();
+    }
+
+    async getPrerequisites(paperId: string): Promise<any[]> {
+        return this.db.query.paperConcepts.findMany({
+            where: eq(schema.paperConcepts.paperId, paperId),
+            with: {
+                concept: true
+            }
+        });
+    }
+
+    async getRelatedPapersRecursive(paperId: string, depth = 2): Promise<any[]> {
+        const result = await this.db.execute(sql`
+            SELECT * FROM get_related_papers(${paperId}::uuid, ${depth})
+        `);
+        return result as any[];
+    }
 }

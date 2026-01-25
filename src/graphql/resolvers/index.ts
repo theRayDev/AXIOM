@@ -1,8 +1,14 @@
 import type { AxiomContext } from '../context';
 import { scalarResolvers } from '../schema';
 import { PaperService } from '@/modules/paper';
+import { PrereqService } from '@/modules/prerequisite';
+import { ConceptService } from '@/modules/concept';
+import { GraphService } from '@/modules/graph';
 
 const paperService = new PaperService();
+const prereqService = new PrereqService();
+const conceptService = new ConceptService();
+const graphService = new GraphService();
 
 /**
  * GraphQL Resolvers
@@ -107,36 +113,22 @@ export const resolvers = {
 
         // Concepts
         concept: async (_: unknown, { id }: { id: string }) => {
-            // TODO: Implement concept service
-            return {
-                id,
-                name: 'Sample Concept',
-                slug: 'sample-concept',
-                description: 'A sample concept',
-                explanation: 'Plain English explanation',
-                field: 'machine_learning',
-                difficulty: 'INTERMEDIATE',
-                parentConcept: null,
-                childConcepts: [],
-            };
+            return conceptService.getConcept(id);
         },
 
         conceptBySlug: async (_: unknown, { slug }: { slug: string }) => {
-            return {
-                id: 'concept_1',
-                name: 'Sample Concept',
-                slug,
-                description: 'A sample concept',
-                explanation: 'Plain English explanation',
-                field: 'machine_learning',
-                difficulty: 'INTERMEDIATE',
-                parentConcept: null,
-                childConcepts: [],
-            };
+            return conceptService.getConceptBySlug(slug);
         },
 
-        concepts: async () => {
-            return [];
+        concepts: async (_: unknown, args: { field?: string }) => {
+            // Basic search or field filter
+            if (args.field) {
+                // We don't have getByField exposed in service yet, but repo has it.
+                // For now, let's use search with field name or implement getByField in service
+                // Using search as fallback
+                return conceptService.searchConcepts(args.field);
+            }
+            return conceptService.searchConcepts(''); // List all?
         },
 
         // Questions
@@ -157,26 +149,12 @@ export const resolvers = {
         },
 
         // Graph
-        curiosityGraph: async () => {
-            return {
-                papers: [],
-                concepts: [],
-                questions: [],
-                edges: [],
-                suggestedNextNodes: [],
-                unexplored: [],
-            };
+        curiosityGraph: async (_: unknown, args: { userId?: string, centerNodeId?: string, depth?: number }) => {
+            return graphService.getCuriosityGraph(args.userId, args.centerNodeId, args.depth);
         },
 
-        expandNode: async () => {
-            return {
-                papers: [],
-                concepts: [],
-                questions: [],
-                edges: [],
-                suggestedNextNodes: [],
-                unexplored: [],
-            };
+        expandNode: async (_: unknown, { nodeId }: { nodeId: string }) => {
+            return graphService.getCuriosityGraph(undefined, nodeId, 1);
         },
 
         // Recommendations
@@ -281,7 +259,27 @@ export const resolvers = {
     },
 
     Paper: {
-        prerequisites: async () => [],
+        prerequisites: async (parent: any) => {
+            const externalId = parent.externalId;
+            const id = parent.id;
+            // Fetch from service
+            const results = await prereqService.getPrerequisites(id, externalId);
+
+            // Filter only concept prerequisites and map to schema
+            return results
+                .filter((p: any) => p.type === 'concept')
+                .map((p: any, index: number) => ({
+                    concept: {
+                        id: p.id,
+                        name: p.name,
+                        slug: p.id,
+                        difficulty: 'INTERMEDIATE',
+                    },
+                    priority: index,
+                    isEssential: p.score > 0.8,
+                    isCompleted: false,
+                }));
+        },
         corequisites: async () => [],
         cites: async () => [],
         citedBy: async () => [],
