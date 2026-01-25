@@ -1,0 +1,402 @@
+@import "tailwindcss";
+
+/* === 🚀 RESEARCHSCROLL - Teen-Friendly Design System === */
+
+:root {
+  /* Dark mode by default - teens love dark mode */
+  --background: #0a0a0f;
+  --background-secondary: #12121a;
+  --foreground: #ffffff;
+  --foreground-muted: #a1a1aa;
+
+  /* 🎨 Vibrant Gradients */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  --gradient-fire: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #f093fb 100%);
+  --gradient-ocean: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-sunset: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --gradient-aurora: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --gradient-neon: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+
+  /* Accent Colors */
+  --accent-purple: #a855f7;
+  --accent-pink: #ec4899;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-green: #10b981;
+  --accent-orange: #f97316;
+  --accent-yellow: #eab308;
+
+  /* Card Styles */
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-glow: 0 0 40px rgba(168, 85, 247, 0.15);
+
+  /* Spacing */
+  --section-spacing: 60px;
+  --content-max-width: 1200px;
+
+  /* Animations */
+  --spring-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --spring-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light mode option */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #fafafa;
+    --background-secondary: #f4f4f5;
+    --foreground: #18181b;
+    --foreground-muted: #71717a;
+    --card-bg: rgba(0, 0, 0, 0.02);
+    --card-border: rgba(0, 0, 0, 0.06);
+    --card-glow: 0 0 40px rgba(168, 85, 247, 0.1);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* === Base Styles === */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* === Animated Background === */
+.bg-mesh {
+  background-image:
+    radial-gradient(at 40% 20%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+}
+
+/* === Glass Card - Upgraded === */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  transition: all 0.3s var(--spring-smooth);
+}
+
+.glass-card:hover {
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: var(--card-glow);
+  transform: translateY(-4px);
+}
+
+/* === Neon Glow Card === */
+.neon-card {
+  background: var(--card-bg);
+  border: 1px solid transparent;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--spring-smooth);
+}
+
+.neon-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1px;
+  background: var(--gradient-primary);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.neon-card:hover::before {
+  opacity: 1;
+}
+
+.neon-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(168, 85, 247, 0.2);
+}
+
+/* === Buttons === */
+.btn-gradient {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--spring-bounce);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+}
+
+.btn-gradient:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 30px rgba(168, 85, 247, 0.5);
+}
+
+.btn-gradient:active {
+  transform: scale(0.98);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--foreground);
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 50px;
+  border: 2px solid var(--card-border);
+  cursor: pointer;
+  transition: all 0.3s var(--spring-smooth);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent-purple);
+  background: rgba(168, 85, 247, 0.1);
+}
+
+/* === Tags/Chips with Colors === */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.2s var(--spring-bounce);
+  cursor: pointer;
+}
+
+.chip-purple {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+.chip-pink {
+  background: rgba(236, 72, 153, 0.2);
+  color: #f472b6;
+}
+
+.chip-blue {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.chip-cyan {
+  background: rgba(6, 182, 212, 0.2);
+  color: #22d3ee;
+}
+
+.chip-green {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.chip-orange {
+  background: rgba(249, 115, 22, 0.2);
+  color: #fb923c;
+}
+
+.chip-yellow {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+}
+
+.chip:hover {
+  transform: scale(1.08);
+}
+
+/* === Typography === */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-glow {
+  text-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+}
+
+.headline-hero {
+  font-size: clamp(48px, 10vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.headline-large {
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.headline-medium {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.body-large {
+  font-size: 18px;
+  color: var(--foreground-muted);
+  line-height: 1.7;
+}
+
+/* === Emoji Reactions Row === */
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50px;
+  font-size: 14px;
+  color: var(--foreground-muted);
+  transition: all 0.2s var(--spring-bounce);
+  cursor: pointer;
+  border: none;
+}
+
+.reaction-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.reaction-btn.active {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+/* === Input === */
+.input-search {
+  width: 100%;
+  padding: 18px 24px 18px 56px;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 50px;
+  font-size: 17px;
+  color: var(--foreground);
+  transition: all 0.3s ease;
+}
+
+.input-search:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+}
+
+.input-search::placeholder {
+  color: var(--foreground-muted);
+}
+
+/* === Floating Animation === */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* === Pulse Glow === */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* === Scroll Snap for Feed === */
+.snap-feed {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+.snap-item {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* === Stats Badge === */
+.stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground-muted);
+}
+
+/* === TL;DR Box === */
+.tldr-box {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  border-left: 3px solid var(--accent-purple);
+  border-radius: 0 16px 16px 0;
+  padding: 16px 20px;
+}
+
+/* === Hide scrollbar but keep functionality === */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
