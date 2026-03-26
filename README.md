@@ -21,7 +21,7 @@ The Curiosity Engine. A graph-based research assistant that maps your knowledge 
    npm run dev
    ```
 
-3. Open [http://localhost:3000](http://localhost:3000)
+3. Open the local website
 
 ## Architecture
 - `src/graphql`: GraphQL Schema & Resolvers
